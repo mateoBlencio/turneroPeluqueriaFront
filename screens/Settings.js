@@ -1,12 +1,12 @@
 import React from "react";
 import {View, Text} from 'react-native';
 
-const Settings = () => {
+export default function Settings({navigation}) {
     return(
-        <View>
-            <Text>Settings Screen</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }     }>
+            <Text
+                onPress={() => navigation.navigate('Home')}
+                style={{fontSize: 26, fontWeight: 'bold' }}>Settings Screen</Text>
         </View>
     )
 }
-
-export default Settings;

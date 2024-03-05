@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 
 const HomeScreen = () => {
@@ -9,9 +9,11 @@ const HomeScreen = () => {
     setFlag(!flag);
   };
 
+  alert("Estamos en homeScreen")
+
   return (
-    <View>
-      <Text>Mis turnos</Text>
+    <View style={styles.container}>
+      <Text style={styles.headerText1}>Mis turnos</Text>
       <View>
         
         {!flag && 
@@ -29,5 +31,20 @@ const HomeScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#253a55',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  headerText1: {
+    fontSize: 50,
+    fontWeight: "bold",
+    color: '#ffff',
+
+  }})
 
 export default HomeScreen;

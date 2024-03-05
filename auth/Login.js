@@ -10,7 +10,6 @@ import {
   Button,
 } from "react-native";
 import Navigator from "../Navigation";
-import ButtonGradient from './ButtonGradient';
 
 
 const Login = () => {
@@ -46,15 +45,15 @@ const Login = () => {
                     <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} value={password} onChangeText={(text) => setPassword(text)}/>
                     <Text style={styles.subtitle}>Has olvidado la constraseña?</Text>
 
-                    <ButtonGradient mensaje={'Iniciar Sesion'} onPress={() => handleLogin(mail, password)}></ButtonGradient>
-                    <ButtonGradient mensaje={'Crear Cuenta'} onPress={() => handleLogin(mail, password)}></ButtonGradient>
-                    {/* <Text style={styles.textButtoms}>No tiene cuenta? <Text style={{textDecorationLine: 'underline',color: 'blue'}}>
-                    Registrarse</Text></Text>
-                    <Button title="Iniciar Sesión" onPress={() => handleLogin(mail, password)} /> */}
+                    <Button title="Iniciar Sesión" onPress={() => handleLogin(mail, password) } style={styles.button} />
+                    <Button title="Crear cuenta" onPress={() => handleSignUp()} />
                 </View>
             </View>
             }
-            {flag && <Navigator />}
+            {
+              flag && 
+              <Navigator />
+            }
             
         </SafeAreaView>
     )
@@ -68,9 +67,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     header: {
-      backgroundColor: "#87CEFA",
-      paddingTop: 40,
-      paddingBottom: 15,
       alignItems: "center",
     },
     headerText1: {
@@ -90,7 +86,8 @@ const styles = StyleSheet.create({
       color: "#c7cccf",
     },
     inputContainer: {
-      padding: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     input: {
       height: 50,
@@ -103,6 +100,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: 'gray',
+      },
+      button: {
+        height: 50,
+        width: '80%',
+        padding: 10,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        padding: 15,
       },
     // textButtoms: {
     //   padding: 10,
