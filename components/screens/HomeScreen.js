@@ -1,8 +1,36 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import RNPickerSelect from 'react-native-picker-select';
 
 function HomeScreen() {
-  const [flag, setFlag] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [dniPeluquero, setDniPeluquero] = useState();
+  const [horaTurno, setHoraTurno] = useState("");
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowPicker(false);
+    setDate(currentDate);
+
+    // Extraer día, mes y año de la fecha seleccionada
+    const selectedDay = currentDate.getDate();
+    const selectedMonth = currentDate.getMonth() + 1; // Los meses comienzan desde 0
+    const selectedYear = currentDate.getFullYear();
+
+    // Guardar los valores en el estado
+    setDay(selectedDay.toString());
+    setMonth(selectedMonth.toString());
+    setYear(selectedYear.toString());
+  };
+
+  const showDatepicker = () => {
+    setShowPicker(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -13,19 +41,53 @@ function HomeScreen() {
 
       <View style={styles.nuevoTurnoContainer}>
         <Text style={styles.title}>Nuevo turno </Text>
-        {!flag && <Button title="+" onPress={() => setFlag(!flag)} />}
-        {flag && (
-          <View>
-            <Button title="-" onPress={() => setFlag(!flag)} />
-            <Text>Calendario: </Text>
-            {/* <Calendar
-              onDayPress={(day) => {
-                console.log("selected day", day);
-              }}
-            /> */}
-            <Text>Hora: </Text>
-          </View>
-        )}
+
+        <View>
+          <Text>Seleccionar peluquero</Text>
+          <RNPickerSelect
+            placeholder={{
+              label: 'Seleccione un peluquero',
+              value: null}}
+            onValueChange={(value) => setDniPeluquero(value)}
+            items={[
+              { label: "peluquero1", value: "dni1" },
+              { label: "peluquero2", value: "dni2" },
+              { label: "peluquero3", value: "dni3" },
+            ]}
+          />
+        </View>
+
+        <View>
+          <Text>Ingrese una fecha: </Text>
+          <Button onPress={showDatepicker} title="Seleccionar fecha" />
+          {showPicker && (
+            <DateTimePicker
+              minimumDate={new Date()}
+              value={date}
+              mode="date"
+              onChange={onChange}
+            />
+          )}
+          <Text>
+            Fecha seleccionada: {day}/{month}/{year}{" "}
+          </Text>
+        </View>
+
+        <View>
+          <Text>Horarios disponibles</Text>
+          <RNPickerSelect
+            placeholder={{
+              label: 'Seleccione un horario',
+              value: null}}
+            onValueChange={(value) => setHoraTurno(value)}
+            items={[
+              { label: "08:00", value: "08:00" },
+              { label: "08:30", value: "08:30" },
+              { label: "09:00", value: "09:00" },
+            ]}
+          />
+        </View>
+      
       </View>
 
       <View style={styles.turnosAnterioresContainer}>
@@ -44,17 +106,14 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   misTurnosContainer: {
-    backgroundColor: "blue",
     marginHorizontal: 5,
     marginBottom: 5,
   },
   nuevoTurnoContainer: {
-    backgroundColor: "blue",
     marginHorizontal: 5,
     marginVertical: 10,
   },
   turnosAnterioresContainer: {
-    backgroundColor: "blue",
     marginHorizontal: 5,
     marginVertical: 10,
   },
