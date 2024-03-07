@@ -39,14 +39,22 @@ function Login ({ navigation }) {
               value={password}
               onChangeText={(text) => setPassword(text)}
             />
-            <Text style={styles.subtitle}>Has olvidado la constraseña?</Text>
 
-            <Button
-              title="Iniciar Sesión"
-              onPress={() => handleLogin(mail, password)}
-              style={styles.button}
-            />
-            <Button title="Crear cuenta" onPress={() => handleSignUp()} />
+            <View style={styles.buttonsBox}>
+              <Button
+                title="Iniciar Sesión"
+                onPress={() => handleLogin(mail, password)}
+                color={"red"}
+              />
+            </View>
+            
+            <View style={styles.buttonsBox}>
+              <Button 
+                title="Crear cuenta" 
+                onPress={() => handleSignUp()} 
+              />
+            </View>
+          
           </View>
         </View>
     </SafeAreaView>
@@ -84,30 +92,20 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: "80%",
-    marginTop: 20,
+    width: "100%",
+    marginVertical: 10,
     borderWidth: 1,
     borderColor: "gray",
-    padding: 10,
     borderRadius: 10,
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "gray",
   },
-  button: {
-    height: 50,
-    width: "80%",
-    padding: 10,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    padding: 15,
-  },
-  // textButtoms: {
-  //   padding: 10,
-  //   textAlign: "center"
-  // }
+  buttonsBox: {
+    width: "100%",
+    marginVertical: 10,
+  }
 });
 
 export default Login;

@@ -10,12 +10,13 @@ function HomeScreen() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [dniPeluquero, setDniPeluquero] = useState();
-  const [horaTurno, setHoraTurno] = useState("");
+  const [seleccionoFecha, setSeleccionoFecha] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(false);
     setDate(currentDate);
+    
 
     // Extraer día, mes y año de la fecha seleccionada
     const selectedDay = currentDate.getDate();
@@ -30,36 +31,60 @@ function HomeScreen() {
 
   const showDatepicker = () => {
     setShowPicker(true);
+    setSeleccionoFecha(true);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.misTurnosContainer}>
         <Text style={styles.title}>Mis turnos</Text>
-        <Text>Aca va a haber una lista de los turnos</Text>
+        <Text style={styles.normalText} >Aca va a haber una lista de los turnos</Text>
       </View>
 
       <View style={styles.nuevoTurnoContainer}>
         <Text style={styles.title}>Nuevo turno </Text>
 
-        <View>
-          <Text>Seleccionar peluquero</Text>
+        <View style={styles.nuevoTurnoTematicaContainer}>
+          <Text style={styles.normalText} >Seleccionar peluquero</Text>
           <RNPickerSelect
             placeholder={{
               label: 'Seleccione un peluquero',
               value: null}}
             onValueChange={(value) => setDniPeluquero(value)}
             items={[
-              { label: "peluquero1", value: "dni1" },
-              { label: "peluquero2", value: "dni2" },
-              { label: "peluquero3", value: "dni3" },
+              { label: "Peluquero1", value: "dni1" },
+              { label: "Peluquero2", value: "dni2" },
+              { label: "Peluquero3", value: "dni3" },
             ]}
           />
         </View>
 
-        <View>
-          <Text>Ingrese una fecha: </Text>
-          <Button onPress={showDatepicker} title="Seleccionar fecha" />
+        <View style={styles.nuevoTurnoTematicaContainer}>
+          <Text style={styles.normalText} >Seleccionar tipo de servicio:</Text>
+          <RNPickerSelect
+            placeholder={{
+              label: 'Seleccione un servicio',
+              value: null}}
+            onValueChange={(value) => setDniPeluquero(value)}
+            items={[
+              { label: "Corte de pelo", value: "nroTipo1" },
+              { label: "Tintura", value: "nroTipo2" },
+              { label: "Peinado", value: "nroTipo3" },
+            ]}
+          />
+        </View>
+
+        <View style={styles.nuevoTurnoTematicaContainer}>
+          <Text style={styles.normalText} >Fecha de turno:    
+        
+          {seleccionoFecha &&
+            <Text style={{fontSize:styles.normalText.fontSize, fontStyle: "italic"}} >
+              {day}/{month}/{year}
+            </Text>
+          }
+        
+          </Text>
+          <Button onPress={showDatepicker} title={"Seleccionar fecha"} />
           {showPicker && (
             <DateTimePicker
               minimumDate={new Date()}
@@ -68,13 +93,11 @@ function HomeScreen() {
               onChange={onChange}
             />
           )}
-          <Text>
-            Fecha seleccionada: {day}/{month}/{year}{" "}
-          </Text>
+          
         </View>
 
-        <View>
-          <Text>Horarios disponibles</Text>
+        <View style={styles.nuevoTurnoTematicaContainer}>
+          <Text style={styles.normalText} >Horarios disponibles</Text>
           <RNPickerSelect
             placeholder={{
               label: 'Seleccione un horario',
@@ -87,7 +110,10 @@ function HomeScreen() {
             ]}
           />
         </View>
-      
+            
+        <View>
+          <Button title="Pedir turno" color={"green"}/>
+        </View>
       </View>
 
       <View style={styles.turnosAnterioresContainer}>
@@ -100,22 +126,30 @@ function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#f0f0f0",
   },
   title: {
-    fontSize: 25,
+    fontSize: 30,
+    fontWeight: "bold"
+  },
+  normalText: {
+    fontSize: 15,
+    
   },
   misTurnosContainer: {
-    marginHorizontal: 5,
-    marginBottom: 5,
+    marginHorizontal: 10,
+    marginVertical: 15,
   },
   nuevoTurnoContainer: {
-    marginHorizontal: 5,
-    marginVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 20,
+  },
+  nuevoTurnoTematicaContainer:{
+    marginVertical: 5,
   },
   turnosAnterioresContainer: {
-    marginHorizontal: 5,
-    marginVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 20,
   },
 });
 
