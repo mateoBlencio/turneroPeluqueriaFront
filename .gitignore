@@ -35,4 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 
 #api
-.components/api/urls
+.components/api/urls.js
