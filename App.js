@@ -14,7 +14,7 @@ function MyStack() {
     <Stack.Navigator initialRouteName={Login} >
       <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
       <Stack.Screen name="Tabs" component={MyTabs} options={{headerShown:false}} />
-      <Stack.Screen name="Settings" component={Settings} options={{headerShown:false}} />
+      
     </Stack.Navigator>
   );
 }

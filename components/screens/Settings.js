@@ -1,12 +1,25 @@
 import React from "react";
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Settings({navigation}) {
+function Settings({navigation}) {
+    const LogOut = () => {
+        alert("Cerrar sesion")
+    }
+
     return(
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }     }>
-            <Text
-                onPress={() => navigation.navigate('Home')}
-                style={{fontSize: 26, fontWeight: 'bold' }}>Settings Screen</Text>
+        <View style={styles.container}>
+            <Button title="Cerrar sesion" onPress={()=>LogOut()}/>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        marginVertical:20,
+        marginHorizontal:10
+    }
+})
+
+
+export default Settings;

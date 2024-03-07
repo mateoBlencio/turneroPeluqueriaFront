@@ -118,6 +118,7 @@ function HomeScreen() {
 
       <View style={styles.turnosAnterioresContainer}>
         <Text style={styles.title}>Turnos recientes</Text>
+        <Text style={styles.normalText}>Aca va a haber una lista de los ultimos 3 turnos</Text>
       </View>
     </View>
   );
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f0f0",
+    marginHorizontal: 10
   },
   title: {
     fontSize: 30,
@@ -137,18 +139,15 @@ const styles = StyleSheet.create({
     
   },
   misTurnosContainer: {
-    marginHorizontal: 10,
     marginVertical: 15,
   },
   nuevoTurnoContainer: {
-    marginHorizontal: 10,
     marginVertical: 20,
   },
   nuevoTurnoTematicaContainer:{
     marginVertical: 5,
   },
   turnosAnterioresContainer: {
-    marginHorizontal: 10,
     marginVertical: 20,
   },
 });
