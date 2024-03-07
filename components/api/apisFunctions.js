@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BASE_URL from "./urls";
 
-const BASE_URL = "http://192.168.1.100:8080";
 
 export const login = async (mailP, passwordP) => {
   const url = `${BASE_URL}/auth/login`;
