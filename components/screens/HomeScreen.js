@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from 'react-native-picker-select';
+import { getPeluqueros, getTiposTurnos } from "../api/apisFunctions";
+
 
 function HomeScreen() {
   const [date, setDate] = useState(new Date());
@@ -11,6 +13,37 @@ function HomeScreen() {
   const [year, setYear] = useState("");
   const [dniPeluquero, setDniPeluquero] = useState();
   const [seleccionoFecha, setSeleccionoFecha] = useState(false);
+  const [peluqueros, setPeluqueros] = useState([]);
+  const [tiposTurnos, setTiposTurnos] = useState([]);
+
+
+  useEffect(async () => {
+    const fetchData = async () => {
+      try {
+        const peluquerosData = await getPeluqueros();
+        setPeluqueros(peluquerosData);
+      } catch (error) {
+        console.error(error.message);
+      }
+
+      try {
+        const tiposTurnosData = await getTiposTurnos();
+        setTiposTurnos(tiposTurnosData);
+      } catch (error) {
+        console.error(error.message);
+      }
+
+      try {
+        const tiposTurnosData = await getTiposTurnos();
+        setTiposTurnos(tiposTurnosData);
+      } catch (error) {
+        console.error(error.message);
+      }
+
+    };
+    fetchData();
+  }, []);
+
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -34,6 +67,8 @@ function HomeScreen() {
     setSeleccionoFecha(true);
   };
 
+  
+
   return (
     <View style={styles.container}>
       <View style={styles.misTurnosContainer}>
@@ -51,11 +86,10 @@ function HomeScreen() {
               label: 'Seleccione un peluquero',
               value: null}}
             onValueChange={(value) => setDniPeluquero(value)}
-            items={[
-              { label: "Peluquero1", value: "dni1" },
-              { label: "Peluquero2", value: "dni2" },
-              { label: "Peluquero3", value: "dni3" },
-            ]}
+            items={peluqueros.map((peluquero) => ({
+              label: peluquero.nombre,
+              value: peluquero.dni
+            }))}
           />
         </View>
 
@@ -66,11 +100,10 @@ function HomeScreen() {
               label: 'Seleccione un servicio',
               value: null}}
             onValueChange={(value) => setDniPeluquero(value)}
-            items={[
-              { label: "Corte de pelo", value: "nroTipo1" },
-              { label: "Tintura", value: "nroTipo2" },
-              { label: "Peinado", value: "nroTipo3" },
-            ]}
+            items={tiposTurnos.map((tipoTurno) => ({
+              label: tipoTurno.nombre,
+              value: tipoTurno.numero
+            }))}
           />
         </View>
 
@@ -103,11 +136,10 @@ function HomeScreen() {
               label: 'Seleccione un horario',
               value: null}}
             onValueChange={(value) => setHoraTurno(value)}
-            items={[
-              { label: "08:00", value: "08:00" },
-              { label: "08:30", value: "08:30" },
-              { label: "09:00", value: "09:00" },
-            ]}
+            items={horarios.map((horario) => ({
+              label: horario.horaData,
+              value: horario.hora
+            }))}
           />
         </View>
             

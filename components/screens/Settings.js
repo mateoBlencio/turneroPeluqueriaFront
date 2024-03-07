@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 function Settings({navigation}) {
     const LogOut = () => {
-        alert("Cerrar sesion")
+        navigation.navigate("Login");
     }
 
     return(

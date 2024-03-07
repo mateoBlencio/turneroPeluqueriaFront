@@ -7,45 +7,20 @@ import {
   TextInput,
   Button
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {login} from '../api/apisFunctions';
 
 function Login({ navigation }) {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
 
   // lo ideal seria que despues todo el codigo referido a la comunicacion con la api la movamos
-  const handleLogin = (email, pass) => {
-    const credentials = {
-      mail: mail,
-      password: password
-    };
-    navigation.navigate("Tabs");
-    // fetch(url, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(credentials),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(async(data) => {
-    //     // Aquí se guarda el JWT del servidor
-    //     const jwtToken = data.token;
-    //     try {
-    //       await AsyncStorage.setItem("jwt", jwtToken);
-    //       navigation.navigate("Tabs");
-    //     } catch (error) {
-    //       console.error("Error saving data:", error);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //   });
+  const handleLogin = async () => {
+    try{
+      await login(mail, password);
+      navigation.navigate("Tabs");
+    } catch (error){
+      console.error(error.message);
+    }
   };
 
   return (
