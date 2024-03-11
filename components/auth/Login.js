@@ -5,60 +5,71 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Button
+  Button,
 } from "react-native";
-import {login} from '../api/apisFunctions';
+import { login } from "../api/apisFunctions";
+import Spinner from "react-native-loading-spinner-overlay";
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 function Login({ navigation }) {
+  const [loading, setLoading] = useState(false);
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
 
-  // lo ideal seria que despues todo el codigo referido a la comunicacion con la api la movamos
   const handleLogin = async () => {
-    try{
+    setLoading(true);
+    try {
       await login(mail, password);
       navigation.navigate("Tabs");
-    } catch (error){
+    } catch (error) {
       console.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.header}>
-          <Text style={styles.headerText1}>Peluqueria</Text>
-          <Text style={styles.headerText2}>il Giani</Text>
+      {loading ? (
+        <View style={styles.spinnerStyleContainer}>
+          <Spinner textContent={"Loading..."} textStyle={{ color: "#FFF" }} />
         </View>
+      ) : (
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.headerText1}>Peluqueria</Text>
+            <Text style={styles.headerText2}>il Giani</Text>
+          </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electronico o usuario"
-            value={mail}
-            onChangeText={(text) => setMail(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-
-          <View style={styles.buttonsBox}>
-            <Button
-              title="Iniciar Sesión"
-              onPress={() => handleLogin(mail, password)}
-              color={"red"}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electronico o usuario"
+              value={mail}
+              onChangeText={(text) => setMail(text)}
             />
-          </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
 
-          <View style={styles.buttonsBox}>
-            <Button title="Crear cuenta" onPress={() => handleSignUp()} />
+            <View style={styles.buttonsBox}>
+              <Button
+                title="Iniciar Sesión"
+                onPress={() => handleLogin(mail, password)}
+                color={"red"}
+              />
+            </View>
+
+            <View style={styles.buttonsBox}>
+              <Button title="Crear cuenta" onPress={() => handleSignUp()} />
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -107,6 +118,13 @@ const styles = StyleSheet.create({
   buttonsBox: {
     width: "100%",
     marginVertical: 10,
+  },
+
+  spinnerStyleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
   },
 });
 

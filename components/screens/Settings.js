@@ -9,7 +9,9 @@ function Settings({navigation}) {
 
     return(
         <View style={styles.container}>
-            <Button title="Cerrar sesion" onPress={()=>LogOut()}/>
+            <Button title="Cerrar sesion" onPress={()=>LogOut()}
+                color={"red"}
+            />
         </View>
     )
 }
