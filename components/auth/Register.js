@@ -7,18 +7,26 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import { login } from "../api/apisFunctions";
+import { register } from "../api/apisFunctions";
 import Spinner from "react-native-loading-spinner-overlay";
 
-function Login({ navigation }) {
+function Register({ navigation }) {
   const [loading, setLoading] = useState(false);
+  const [hayCamposIncompletos, setHayCamposIncompletos] = useState(false);
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [dni, setDni] = useState("");
 
-  const handleLogin = async () => {
+  const handleSignUp = async (mail, password, dni, nombre) => {
+    if (mail == "" || password == "" || dni == "" || nombre == ""){
+        setHayCamposIncompletos(true);
+        return
+    }
     setLoading(true);
     try {
-      await login(mail, password);
+      await register(mail, password, nombre, dni);
+      alert("Cuenta creada con exito!");
       navigation.navigate("Tabs");
     } catch (error) {
       console.error(error.message);
@@ -36,14 +44,31 @@ function Login({ navigation }) {
       ) : (
         <View>
           <View style={styles.header}>
-            <Text style={styles.headerText1}>Peluqueria</Text>
-            <Text style={styles.headerText2}>il Giani</Text>
+            <Text style={styles.headerText1}>Registrarse</Text>
           </View>
+
+          {hayCamposIncompletos && (
+            <View style={styles.advertenciaBoxStyle}>
+              <Text>Todos los campos son necesarios</Text>
+            </View>
+          )}
 
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Correo electronico o usuario"
+              placeholder="Ingrese su nombre"
+              value={nombre}
+              onChangeText={(text) => setNombre(text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Ingrese su dni"
+              value={dni}
+              onChangeText={(text) => setDni(text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electronico"
               value={mail}
               onChangeText={(text) => setMail(text)}
             />
@@ -57,14 +82,9 @@ function Login({ navigation }) {
 
             <View style={styles.buttonsBox}>
               <Button
-                title="Iniciar Sesión"
-                onPress={() => handleLogin(mail, password)}
-                color={"red"}
+                title="Crear cuenta"
+                onPress={() => handleSignUp(mail, password, dni, nombre)}
               />
-            </View>
-
-            <View style={styles.buttonsBox}>
-              <Button title="Crear cuenta" onPress={() => navigation.navigate("Register")} />
             </View>
           </View>
         </View>
@@ -127,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;

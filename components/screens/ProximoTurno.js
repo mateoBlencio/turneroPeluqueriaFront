@@ -6,18 +6,26 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import { getProximosTurnos } from "../api/apisFunctions";
+import { getProximosTurnos, cancelarTurno } from "../api/apisFunctions";
+
+// icons
+import { MaterialIcons } from "@expo/vector-icons";
 
 function ProximoTurno() {
   const [hayProximoTurno, setHayProximoTurno] = useState(false);
+  const [proximo, setProximo] = useState();
+  const [va, setVa] = useState(true);
   const [turnosProximos, setTurnosProximos] = useState([]);
   const carouselRef = React.useRef(null);
+  const [refresh, setRefresh] = useState(false);
+  const [primeraCarga, setPrimeraCarga] = useState(true);
 
   // calcula el tamaño
   const windowWidth = Dimensions.get("window").width;
-  const carouselWidth = windowWidth * 0.9; // 80% del ancho de la pantalla
+  const carouselWidth = windowWidth * 0.9;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,20 +39,53 @@ function ProximoTurno() {
         console.error(error.message);
       }
     };
-    fetchData();
-  }, []);
+    
+    if (primeraCarga || refresh){
+      fetchData();
+      setPrimeraCarga(false);
+    }
+  }, [refresh, primeraCarga]);
 
   const handleItemPress = () => {
     const currentIndex = carouselRef.current.getCurrentIndex();
     const lastIndex = turnosProximos.length - 1;
+    const firstIndex = 0;
 
+    if (currentIndex === firstIndex) {
+      setProximo(carouselRef.current.next());
+      setVa(true);
+    }
     if (currentIndex === lastIndex) {
-      carouselRef.current.scrollTo({ index: 0 });
+      setProximo(carouselRef.current.prev());
+      setVa(false);
+    }
+
+    if (va) {
+      setProximo(carouselRef.current.next());
     } else {
-      carouselRef.current.next();
+      setProximo(carouselRef.current.prev());
+    }
+
+    carouselRef.current.scrollTo({ proximo });
+  };
+
+  const [cartelDelete, setCartelDelete] = useState(false);
+  const handleDelete = async (item) => {
+    try {
+      const { numero, dniPeluquero, fechaTurno } = item;
+      await cancelarTurno(numero, dniPeluquero, fechaTurno);
+      setRefresh(true);
+      alert("Turno cancelado!");
+    } catch (error) {
+      console.error(error.message);
+      alert("No se pudo cancelar el turno.");
+    } finally {
+      setCartelDelete(false);
+      setRefresh(false);
     }
   };
 
+  // En caso de no poder cancelar el turno estaria bueno que diga el porque no se puede
   return (
     <View>
       {hayProximoTurno ? (
@@ -57,29 +98,77 @@ function ProximoTurno() {
               height={100}
               autoPlay={false}
               data={turnosProximos}
+              enabled={turnosProximos.length === 1 ? false : true}
               scrollAnimationDuration={1000}
-              mode="parallax"
-              modeConfig={{
-                parallaxScrollingScale: 1,
-                parallaxScrollingOffset: 100,
-                parallaxAdjacentItemScale: 0.5,
-              }}
-              renderItem={({ item, index }) => (
-                <View style={styles.turnoContainer}>
-                  <TouchableOpacity onPress={() => handleItemPress()}>
-                    <Text style={styles.normalText}>
-                      Peluquero: {item.nombrePeluquero}
-                    </Text>
-                    <Text style={styles.normalText}>
-                      Fecha: {item.fechaTurno}
-                    </Text>
-                    <Text style={styles.normalText}>
-                      Hora: {item.horaTurno}
-                    </Text>
-                    <Text style={styles.normalText}>
-                      Tipo de turno: {item.nombreTipoTurno}
-                    </Text>
-                  </TouchableOpacity>
+              mode="normal"
+              renderItem={({ item }) => (
+                <View>
+                  {cartelDelete ? (
+                    <View style={styles.cartelDeleteContainer}>
+                      <Text style={{ textAlign: "center", fontSize: 15 }}>
+                        ¿DESEA CANCELAR EL TURNO?
+                      </Text>
+                      <Text style={{ textAlign: "center" }}>
+                        Se cancelara solo si faltan mas de 24hs para el turno
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginHorizontal: 30,
+                        }}
+                      >
+                        <Button
+                          title="No cancelar"
+                          color={"blue"}
+                          onPress={() => setCartelDelete(false)}
+                        />
+                        <Button
+                          title="Si, seguro"
+                          color={"red"}
+                          onPress={() => handleDelete(item)}
+                        />
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={styles.turnoContainer}>
+                      <TouchableOpacity onPress={() => handleItemPress()}>
+                        <Text style={styles.normalText}>
+                          Peluquero: {item.nombrePeluquero}
+                        </Text>
+                        <Text style={styles.normalText}>
+                          Fecha: {item.fechaTurno}
+                        </Text>
+                        <Text style={styles.normalText}>
+                          Hora: {item.horaTurno}
+                        </Text>
+                        <Text style={styles.normalText}>
+                          Tipo de turno: {item.nombreTipoTurno}
+                        </Text>
+                      </TouchableOpacity>
+                      {item.activo ? (
+                        <View style={styles.deleteButonContainer}>
+                          <TouchableOpacity
+                            onPress={() => setCartelDelete(true)}
+                          >
+                            <MaterialIcons
+                              name="cancel"
+                              size={35}
+                              color="red"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ) : (
+                        <TouchableOpacity onPress={() => handleItemPress()}>
+                          <View style={{ marginRight: 5 }}>
+                            <Text style={{ fontStyle: "italic" }}>
+                              Turno cancelado
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
                 </View>
               )}
             />
@@ -93,6 +182,9 @@ function ProximoTurno() {
 }
 
 const styles = StyleSheet.create({
+  normalText: {
+    fontSize: 16,
+  },
   turnosContainerDelContainer: {
     marginVertical: 5,
     alignItems: "center",
@@ -105,9 +197,21 @@ const styles = StyleSheet.create({
     borderColor: "blue",
     backgroundColor: "lightgray",
     marginHorizontal: 3,
+
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  normalText: {
-    fontSize: 16,
+  deleteButonContainer: {
+    marginRight: 10,
+  },
+  cartelDeleteContainer: {
+    paddingVertical: 4,
+    paddingHorizontal: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "blue",
+    backgroundColor: "lightgray",
   },
 });
 

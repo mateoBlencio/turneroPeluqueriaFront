@@ -12,8 +12,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function MyTabs() {
   return (
-    <Tab.Navigator initialRouteName='Home' screenOptions={{headerTitleAlign:"center"}}>
-      <Tab.Screen name="Home" component={HomeScreen} 
+    <Tab.Navigator initialRouteName='HomeScreen' screenOptions={{headerTitleAlign:"center"}}>
+      <Tab.Screen name="HomeScreen" component={HomeScreen} 
         options={{
             tabBarIcon: ({ color, size })=>(
               <Entypo name="home" size={size} color={color} />
