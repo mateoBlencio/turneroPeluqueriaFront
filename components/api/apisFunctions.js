@@ -301,6 +301,7 @@ export const cancelarTurno = async (numero, dniPeluquero, fechaTurno) => {
     }
     
   } catch (error) {
+    alert('No se pudo cancelar el turno, revise que no falten menos de 24hs para el mismo');
     throw new Error("Error fetching data: " + error.message);
   }
 }

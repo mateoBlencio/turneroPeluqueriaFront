@@ -4,7 +4,6 @@ import {
   Text,
   Button,
   StyleSheet,
-  ScrollView,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
@@ -21,12 +20,13 @@ import Spinner from "react-native-loading-spinner-overlay";
 // icons
 import { AntDesign } from "@expo/vector-icons";
 
-function NuevoTurno() {
+function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [loadingPeluqueros, setLoadingPeluqueros] = useState(true);
   const [loadingTiposTurnos, setLoadingTiposTurnos] = useState(true);
   const [casilleroHabilitado, setCasilleroHabilitado] = useState(0);
   const [mostrarCalendario, setMostrarCalenario] = useState(false);
+  const [yaSeMostroCalendario, setYaSeMostroCalendario] = useState(false);
 
   // Variables responsables de refrescar views
   const [refresh, setRefresh] = useState(false);
@@ -74,12 +74,12 @@ function NuevoTurno() {
         setLoadingTiposTurnos(false);
       }
     };
-    if (primeraCarga || refresh) {
+    if (primeraCarga || refresh || refreshPadre) {
       fetchData();
       setPrimeraCarga(false);
       setRefresh(false);
     }
-  }, [refresh, primeraCarga]);
+  }, [refresh, primeraCarga, refreshPadre]);
 
   const cargarPeluquero = (value) => {
     setSelectedPeluqueroValue(value);
@@ -99,7 +99,7 @@ function NuevoTurno() {
 
   const onDateChange = async (date) => {
     if (
-      casilleroHabilitado == 2 &&
+      casilleroHabilitado >= 2 &&
       dniPeluquero != null &&
       nroTipoTurno != null
     ) {
@@ -119,6 +119,7 @@ function NuevoTurno() {
       } catch (error) {
         console.error(error.message);
       } finally {
+        setYaSeMostroCalendario(true);
         setCasilleroHabilitado(casilleroHabilitado + 1);
       }
     }
@@ -127,7 +128,7 @@ function NuevoTurno() {
   const cargarHoraTurno = (value) => {
     setSelectedHorarioValue(value);
     setHoraTurno(value);
-    if (casilleroHabilitado == 3 && value != null) {
+    if (casilleroHabilitado >= 3 && value != null) {
       setCasilleroHabilitado(casilleroHabilitado + 1);
     }
   };
@@ -135,7 +136,8 @@ function NuevoTurno() {
   const generarTurno = async () => {
     if (
       dniPeluquero != null &&
-      (nroTipoTurno != null) & (fechaFormatoFecha != null) &&
+      nroTipoTurno != null &&
+      fechaFormatoFecha != null &&
       horaTurno != null
     ) {
       try {
@@ -150,13 +152,15 @@ function NuevoTurno() {
         setSelectedHorarioValue(null);
         setRefresh(true);
         setCasilleroHabilitado(0);
+        onNuevoTurnoGenerado();
       } catch (error) {
         console.error(error.message);
       }
+    } else {
+      alert("Todos los campos son obligatorios");
     }
   };
 
-  // deberia refrescarse el homeScreen una vez que se genere un nuevo turno
   return (
     <View>
       {loadingPeluqueros || loadingTiposTurnos ? (
@@ -193,7 +197,7 @@ function NuevoTurno() {
               }}
               onValueChange={(value) => cargarTipoTurno(value)}
               items={tiposTurnos.map((tipoTurno) => ({
-                label: tipoTurno.nombre,
+                label: `${tipoTurno.nombre} - $${tipoTurno.precio}`,
                 value: tipoTurno.numero,
               }))}
               value={selectedTipoTurnoValue}
@@ -205,25 +209,31 @@ function NuevoTurno() {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={styles.normalText}>Horarios disponibles</Text>
+              <View>
+                <Text style={styles.normalText}>Horarios disponibles</Text>
+                {horasLibres != [] &&
+                casilleroHabilitado >= 3 &&
+                yaSeMostroCalendario ? (
+                  <Text style={styles.normalText}>
+                    Fecha seleccionada: {fechaFormatoFecha.getDate()} /{" "}
+                    {fechaFormatoFecha.getMonth() + 1} /{" "}
+                    {fechaFormatoFecha.getFullYear()}
+                  </Text>
+                ) : null}
+              </View>
               <TouchableOpacity
                 onPress={() => setMostrarCalenario(!mostrarCalendario)}
                 disabled={casilleroHabilitado <= 1}
+                style={{
+                  marginVertical: 10,
+                  marginRight: 8,
+                  backgroundColor: "lightgray",
+                  borderWidth: 2,
+                  borderRadius: 5,
+                  borderColor: "lightgray",
+                }}
               >
-                <View
-                  style={{
-                    marginBottom: 5,
-                    marginRight: 30,
-                    backgroundColor: "blue",
-                    borderWidth: 2,
-                    borderRadius: 5,
-                    borderColor: "blue",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <AntDesign name="calendar" size={28} color="black" />
-                </View>
+                <AntDesign name="calendar" size={28} color="black" />
               </TouchableOpacity>
             </View>
             {mostrarCalendario && (
@@ -233,6 +243,9 @@ function NuevoTurno() {
                   minDate={new Date()}
                   width={calendarWidth}
                   height={calendarWidth} // 450
+                  todayTextStyle="black"
+                  selectedDayColor="blue"
+                  selectedDayTextColor="white"
                 />
                 <View>
                   <Button
@@ -277,38 +290,32 @@ function NuevoTurno() {
 }
 
 const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
-  },
-  container: {
-    backgroundColor: "#f0f0f0",
-    marginHorizontal: 10,
-  },
   title: {
     fontSize: 30,
     fontWeight: "bold",
   },
   normalText: {
+    marginTop: 1,
     fontSize: 15,
   },
-  misTurnosContainer: {},
-  nuevoTurnoContainer: {
-    marginVertical: 10,
-  },
   nuevoTurnoTematicaContainer: {
+    borderColor: "lightgray",
+    borderRadius: 5,
+    borderWidth: 1,
+
     marginVertical: 4,
+    paddingHorizontal: 10,
   },
   calendarioContainer: {
     backgroundColor: "lightgray",
     borderColor: "blue",
     borderRadius: 5,
     borderWidth: 1,
+    marginBottom: 10,
   },
   buttonContainer: {
-    marginTop: 3,
-  },
-  turnosAnterioresContainer: {
-    marginVertical: 10,
+    marginTop: 5,
+    marginHorizontal: 10,
   },
 
   spinnerStyleContainer: {

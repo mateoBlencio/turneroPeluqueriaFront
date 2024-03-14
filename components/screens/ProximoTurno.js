@@ -14,7 +14,7 @@ import { getProximosTurnos, cancelarTurno } from "../api/apisFunctions";
 // icons
 import { MaterialIcons } from "@expo/vector-icons";
 
-function ProximoTurno() {
+function ProximoTurno({ refreshPadre }) {
   const [hayProximoTurno, setHayProximoTurno] = useState(false);
   const [proximo, setProximo] = useState();
   const [va, setVa] = useState(true);
@@ -40,11 +40,11 @@ function ProximoTurno() {
       }
     };
     
-    if (primeraCarga || refresh){
+    if (primeraCarga || refresh || refreshPadre){
       fetchData();
       setPrimeraCarga(false);
     }
-  }, [refresh, primeraCarga]);
+  }, [refresh, primeraCarga, refreshPadre]);
 
   const handleItemPress = () => {
     const currentIndex = carouselRef.current.getCurrentIndex();
@@ -85,7 +85,6 @@ function ProximoTurno() {
     }
   };
 
-  // En caso de no poder cancelar el turno estaria bueno que diga el porque no se puede
   return (
     <View>
       {hayProximoTurno ? (

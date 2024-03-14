@@ -37,7 +37,6 @@ function Login({ navigation }) {
         <View>
           <View style={styles.header}>
             <Text style={styles.headerText1}>Peluqueria</Text>
-            <Text style={styles.headerText2}>il Giani</Text>
           </View>
 
           <View style={styles.inputContainer}>
