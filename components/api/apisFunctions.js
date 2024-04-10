@@ -244,7 +244,6 @@ export const getProximosTurnos = async () => {
     }
 
     const data = await response.json();
-
     // Devolver el listado de JSONs
     return data;
   } catch (error) {

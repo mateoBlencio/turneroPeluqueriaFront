@@ -23,6 +23,7 @@ function Login({ navigation }) {
       navigation.navigate("Tabs");
     } catch (error) {
       console.error(error.message);
+      setLoading(false);
     }
   };
 

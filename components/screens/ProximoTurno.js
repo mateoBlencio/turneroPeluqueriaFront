@@ -74,20 +74,20 @@ function ProximoTurno({ refreshPadre }) {
     try {
       const { numero, dniPeluquero, fechaTurno } = item;
       await cancelarTurno(numero, dniPeluquero, fechaTurno);
+      setTurnosProximos(turnosProximos.filter(turno => turno.numero != item.numero))
+      setCartelDelete(false);
       setRefresh(true);
       alert("Turno cancelado!");
     } catch (error) {
       console.error(error.message);
-      alert("No se pudo cancelar el turno.");
-    } finally {
       setCartelDelete(false);
-      setRefresh(false);
-    }
+      alert("No se pudo cancelar el turno.");      
+    } 
   };
 
   return (
     <View>
-      {hayProximoTurno ? (
+      {turnosProximos.length > 0 ? (
         <View style={styles.turnosContainerDelContainer}>
           <ScrollView>
             <Carousel
@@ -145,7 +145,6 @@ function ProximoTurno({ refreshPadre }) {
                           Tipo de turno: {item.nombreTipoTurno}
                         </Text>
                       </TouchableOpacity>
-                      {item.activo ? (
                         <View style={styles.deleteButonContainer}>
                           <TouchableOpacity
                             onPress={() => setCartelDelete(true)}
@@ -157,15 +156,6 @@ function ProximoTurno({ refreshPadre }) {
                             />
                           </TouchableOpacity>
                         </View>
-                      ) : (
-                        <TouchableOpacity onPress={() => handleItemPress()}>
-                          <View style={{ marginRight: 5 }}>
-                            <Text style={{ fontStyle: "italic" }}>
-                              Turno cancelado
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      )}
                     </View>
                   )}
                 </View>

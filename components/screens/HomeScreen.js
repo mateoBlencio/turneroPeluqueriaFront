@@ -43,7 +43,7 @@ function HomeScreen({ navigation }) {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
