@@ -15,6 +15,22 @@ export const login = async (mailP, passwordP) => {
       body: JSON.stringify(credentials),
     });
 
+    // const jwt = require('jsonwebtoken');
+
+    // Supongamos que `token` es el JWT que recibes de la API
+    // const token = '...'; // Tu JWT aquí
+
+    // Decodificar el token
+    // const decodedToken = jwt.decode(token);
+
+    // Acceder a las reclamaciones (claims) del token
+    // if (decodedToken) {
+    //   const rol = decodedToken.rol;
+    //   console.log('Rol:', rol);
+    // } else {
+    //   console.error('No se pudo decodificar el token');
+    // }
+
     if (!response.ok) {
       alert("Algo salio mal");
       throw new Error("Network response was not ok");
@@ -22,10 +38,11 @@ export const login = async (mailP, passwordP) => {
 
     const data = await response.json();
     const jwtToken = data.token;
+
     await AsyncStorage.setItem("jwt", jwtToken);
     await AsyncStorage.setItem("mailUser", mailP)
 
-    return jwtToken;
+    //return jwtToken;
   } catch (error) {
     throw new Error("Error fetching data: " + error.message);
   }
@@ -265,6 +282,36 @@ export const getTurnosAnteriores = async () => {
 
     const data = await response.json();
 
+    // Devolver el listado de JSONs
+    return data;
+  } catch (error) {
+    throw new Error("Error fetching data: " + error.message);
+  }
+}
+
+export const getTurnosCancelados = async () => {
+  const mail = await AsyncStorage.getItem("mailUser");
+  
+  const url = `${BASE_URL}/turnos/misturnos/cancelados?mail=${mail}`;
+
+  // Obtener el JWT guardado en AsyncStorage
+  const jwtToken = await AsyncStorage.getItem("jwt");
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Agregar el token JWT al encabezado de la solicitud
+        "Authorization": `Bearer ${jwtToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
     // Devolver el listado de JSONs
     return data;
   } catch (error) {

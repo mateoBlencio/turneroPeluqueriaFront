@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,9 +6,9 @@ import {
   Text,
   TextInput,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import { login } from "../api/apisFunctions";
-import Spinner from "react-native-loading-spinner-overlay";
 
 function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -16,24 +16,19 @@ function Login({ navigation }) {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       await login(mail, password);
+      setLoading(false);
       navigation.navigate("Tabs");
     } catch (error) {
       console.error(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {loading ? (
-        <View style={styles.spinnerStyleContainer}>
-          <Spinner textContent={"Loading..."} textStyle={{ color: "#FFF" }} />
-        </View>
-      ) : (
+    <View style={styles.container}>
+      {!loading ? (
         <View>
           <View style={styles.header}>
             <Text style={styles.headerText1}>Peluqueria</Text>
@@ -63,12 +58,19 @@ function Login({ navigation }) {
             </View>
 
             <View style={styles.buttonsBox}>
-              <Button title="Crear cuenta" onPress={() => navigation.navigate("Register")} />
+              <Button
+                title="Crear cuenta"
+                onPress={() => navigation.navigate("Register")}
+              />
             </View>
           </View>
         </View>
+      ) : (
+        <View style={styles.spinnerStyleContainer}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#253a55",
   },
 });
 

@@ -5,10 +5,12 @@ const Tab = createBottomTabNavigator();
 // screens
 import HomeScreen from './screens/HomeScreen';
 import Settings from './screens/Settings';
+import TurnosAntiguos from './screens/TurnosAntiguos';
 
 // Icons
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+
 
 export default function MyTabs() {
   return (
@@ -19,6 +21,14 @@ export default function MyTabs() {
               <Entypo name="home" size={size} color={color} />
             ),
             title:"Inicio",
+          }}
+      />
+      <Tab.Screen name="TurnosAntiguos" component={TurnosAntiguos} 
+        options={{
+            tabBarIcon: ({ color, size })=>(
+              <Entypo name="ticket" size={size} color={color} />
+            ),
+            title:"Mis turnos",
           }}
       />
       <Tab.Screen name="Settings" component={Settings} 

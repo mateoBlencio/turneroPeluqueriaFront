@@ -3,41 +3,40 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl, Alert} from "react-
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProximoTurno from "./ProximoTurno";
-import TurnosAnteriores from "./TurnosAnteriores";
 import NuevoTurno from "./NuevoTurno";
 
 
 function HomeScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
+  const [confirmExit, setConfirmExit] = useState(false);
 
   const LogOut = () => {
     AsyncStorage.clear();
     navigation.navigate("Login");
   };
 
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        
-        // Prevent default behavior of leaving the screen
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!confirmExit) {
         e.preventDefault();
-
-        // Prompt the user before leaving the screen
+        setConfirmExit(true);
         Alert.alert(
           'Desea salir?',
           'Si desea salir se cerrara su sesion!',
           [
-            { text: "No salir", style: 'cancel', onPress: () => {} },
+            { text: "No salir", style: 'cancel', onPress: () => { setConfirmExit(false); } },
             {
               text: 'Si, cerrar sesion',
               style: 'destructive',
-              onPress: () => LogOut()
+              onPress: () => { LogOut(); }
             },
           ]
         );
-      }),
-    [navigation]
-  );
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, confirmExit]);
 
 
   const onRefresh = useCallback(() => {
@@ -62,11 +61,6 @@ function HomeScreen({ navigation }) {
           <View style={styles.nuevoTurnoContainer}>
             <Text style={styles.title}>Nuevo turno </Text>
             <NuevoTurno onNuevoTurnoGenerado={onRefresh} refreshPadre={refreshing} />
-          </View>
-
-          <View style={styles.turnosAnterioresContainer}>
-            <Text style={styles.title}>Turnos recientes</Text>
-            <TurnosAnteriores />
           </View>
         </View>
       </ScrollView>
