@@ -14,7 +14,8 @@ import {
   getHorasLibre,
   createTurno,
 } from "../api/apisFunctions";
-import CalendarPicker from "react-native-calendar-picker"; // Esto anda mal 
+// import CalendarPicker from "react-native-calendar-picker"; // Esto anda mal
+import { Calendar } from "react-native-calendars";
 import Spinner from "react-native-loading-spinner-overlay";
 
 // icons
@@ -104,17 +105,15 @@ function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
       dniPeluquero != null &&
       nroTipoTurno != null
     ) {
-      setSelectedStartDate(date);
-      const fechaNueva = new Date(date);
-      setFechaFormatoFecha(fechaNueva);
+      setFechaFormatoFecha(date);
 
       try {
         const horasLibresData = await getHorasLibre(
           dniPeluquero,
           nroTipoTurno,
-          fechaNueva.getDate(),
-          fechaNueva.getMonth() + 1,
-          fechaNueva.getFullYear()
+          date.day,
+          date.month,
+          date.year
         );
         setHorasLibres(horasLibresData);
       } catch (error) {
@@ -216,9 +215,7 @@ function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
                 casilleroHabilitado >= 3 &&
                 yaSeMostroCalendario ? (
                   <Text style={styles.normalText}>
-                    Fecha seleccionada: {fechaFormatoFecha.getDate()} /{" "}
-                    {fechaFormatoFecha.getMonth() + 1} /{" "}
-                    {fechaFormatoFecha.getFullYear()}
+                    Fecha seleccionada: {fechaFormatoFecha.day}/{fechaFormatoFecha.month}/{fechaFormatoFecha.year}
                   </Text>
                 ) : null}
               </View>
@@ -238,15 +235,21 @@ function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
               </TouchableOpacity>
             </View>
             {mostrarCalendario && (
-              <View >
-                <CalendarPicker
-                  onDateChange={onDateChange}
+              <View>
+                <Calendar
+                  onDayPress={(date) => {
+                    onDateChange(date);
+                  }}
                   minDate={new Date()}
-                  width={calendarWidth}
-                  height={calendarWidth} // 450
-                  todayTextStyle="black"
-                  selectedDayColor="blue"
-                  selectedDayTextColor="white"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "gray",
+                  }}
+                  theme={{
+                    selectedDayBackgroundColor: "blue",
+                    selectedDayTextColor: "blue",
+                    todayTextColor: "black",
+                  }}
                 />
                 <View>
                   <Button
@@ -294,12 +297,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#404040"
+    color: "#404040",
   },
   normalText: {
     marginTop: 1,
     fontSize: 15,
-    color: "#404040"
+    color: "#404040",
   },
   nuevoTurnoTematicaContainer: {
     borderColor: "lightgray",

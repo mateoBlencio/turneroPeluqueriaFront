@@ -24,7 +24,7 @@ const PeluqueroHome = () => {
 
   return (
     <View style={styles.turnosCanceladosContainer}>
-      {/* <Text style={styles.centerGiantText}>Turnos de: JUAN </Text> */}
+      <Text style={styles.centerGiantText}>Proximos Turnos</Text>
       {hayTurnos ? (
         <FlatList
           data={turnos}

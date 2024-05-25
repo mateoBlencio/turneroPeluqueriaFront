@@ -167,9 +167,9 @@ export const createTurno = async (dniPeluquero, nroTipoTurno, fechaFormatoFecha,
   // Crear el objeto con los datos a enviar
   const datosTurno = {
     dniPeluquero: dniPeluquero,
-    day: fechaFormatoFecha.getDate(),
-    month: fechaFormatoFecha.getMonth() + 1,
-    year: fechaFormatoFecha.getFullYear(),
+    day: fechaFormatoFecha.day,
+    month: fechaFormatoFecha.month,
+    year: fechaFormatoFecha.year,
     horaTurnoP: horaTurno,
     fechaActual: new Date(),
     tipoTurno: nroTipoTurno,
