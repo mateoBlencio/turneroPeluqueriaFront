@@ -34,7 +34,7 @@ function Register({ navigation }) {
       setLoading(false);
     }
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -96,7 +96,7 @@ function Register({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#253a55",
+    backgroundColor: "#A6A6A6",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   headerText1: {
     fontSize: 50,
     fontWeight: "bold",
-    color: "#ffff",
+    color: "#404040",
   },
   headerText2: {
     fontSize: 40,

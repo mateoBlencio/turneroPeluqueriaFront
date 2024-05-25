@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     container:{
         marginHorizontal:6,
         flexDirection:'column',
+        backgroundColor: "#D9D9D9"
     },
     box:{
         height: '50%'
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 30,
       fontWeight: "bold",
+      color: "#404040"
     }
 })
 

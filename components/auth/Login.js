@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -18,9 +17,9 @@ function Login({ navigation }) {
   const handleLogin = async () => {
     try {
       setLoading(true);
-      await login(mail, password);
+      const authority = await login(mail, password);
       setLoading(false);
-      navigation.navigate("Tabs");
+      navigation.navigate("Tabs", {authority: authority});
     } catch (error) {
       console.error(error.message);
       setLoading(false);
@@ -78,7 +77,7 @@ function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#253a55",
+    backgroundColor: "#A6A6A6",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
   headerText1: {
     fontSize: 50,
     fontWeight: "bold",
-    color: "#ffff",
+    color: "#404040",
   },
   headerText2: {
     fontSize: 40,
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#253a55",
+    backgroundColor: "#A6A6A6",
   },
 });
 

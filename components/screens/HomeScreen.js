@@ -45,7 +45,7 @@ function HomeScreen({ navigation }) {
       setRefreshing(false);
     }, 500);
   }, []);
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView 
@@ -70,12 +70,13 @@ function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#D9D9D9",
     marginHorizontal: 10,
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
+    color: "#404040"
   },
   proximosTurnos:{},
   nuevoTurnoContainer:{marginVertical:15},
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#A6A6A6",
   },
 });
 

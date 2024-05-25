@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BASE_URL from "./urls";
+import { jwtDecode } from "jwt-decode";
 
 export const login = async (mailP, passwordP) => {
   const url = `${BASE_URL}/auth/login`;
@@ -15,22 +16,6 @@ export const login = async (mailP, passwordP) => {
       body: JSON.stringify(credentials),
     });
 
-    // const jwt = require('jsonwebtoken');
-
-    // Supongamos que `token` es el JWT que recibes de la API
-    // const token = '...'; // Tu JWT aquí
-
-    // Decodificar el token
-    // const decodedToken = jwt.decode(token);
-
-    // Acceder a las reclamaciones (claims) del token
-    // if (decodedToken) {
-    //   const rol = decodedToken.rol;
-    //   console.log('Rol:', rol);
-    // } else {
-    //   console.error('No se pudo decodificar el token');
-    // }
-
     if (!response.ok) {
       alert("Algo salio mal");
       throw new Error("Network response was not ok");
@@ -42,7 +27,11 @@ export const login = async (mailP, passwordP) => {
     await AsyncStorage.setItem("jwt", jwtToken);
     await AsyncStorage.setItem("mailUser", mailP)
 
-    //return jwtToken;
+    // Decodificacion de JWT
+    const jwtDecoded = jwtDecode(jwtToken);
+    const authority = jwtDecoded.data[0].authority;
+
+    return authority;
   } catch (error) {
     throw new Error("Error fetching data: " + error.message);
   }
@@ -348,6 +337,42 @@ export const cancelarTurno = async (numero, dniPeluquero, fechaTurno) => {
     
   } catch (error) {
     alert('No se pudo cancelar el turno, revise que no falten menos de 24hs para el mismo');
+    throw new Error("Error fetching data: " + error.message);
+  }
+}
+
+export const getTurnosPorPeluquero = async () => {
+  const mail = await AsyncStorage.getItem("mailUser");
+
+  const day = new Date().getDate();
+  const month = new Date().getMonth()+1;
+  const year = new Date().getFullYear(); 
+  const hours = new Date().getHours();
+  const minutes = new Date().getMinutes();
+
+  const url = `${BASE_URL}/turnos/turnospeluquero?mail=${mail}&day=${day}&month=${month}&year=${year}&hours=${hours}&minutes=${minutes}`;
+
+  // Obtener el JWT guardado en AsyncStorage
+  const jwtToken = await AsyncStorage.getItem("jwt");
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtToken}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    // Devolver el listado de JSONs
+    return data;
+  } catch (error) {
     throw new Error("Error fetching data: " + error.message);
   }
 }

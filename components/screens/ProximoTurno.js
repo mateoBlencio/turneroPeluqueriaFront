@@ -173,6 +173,7 @@ function ProximoTurno({ refreshPadre }) {
 const styles = StyleSheet.create({
   normalText: {
     fontSize: 16,
+    color: "#404040"
   },
   turnosContainerDelContainer: {
     marginVertical: 5,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: "blue",
-    backgroundColor: "lightgray",
+    backgroundColor: "#A6A6A6",
     marginHorizontal: 3,
 
     flexDirection: "row",
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: "blue",
-    backgroundColor: "lightgray",
+    backgroundColor: "#A6A6A6",
   },
 });
 

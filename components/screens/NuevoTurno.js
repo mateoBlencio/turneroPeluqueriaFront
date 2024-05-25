@@ -14,11 +14,12 @@ import {
   getHorasLibre,
   createTurno,
 } from "../api/apisFunctions";
-import CalendarPicker from "react-native-calendar-picker";
+import CalendarPicker from "react-native-calendar-picker"; // Esto anda mal 
 import Spinner from "react-native-loading-spinner-overlay";
 
 // icons
 import { AntDesign } from "@expo/vector-icons";
+import { TextInput } from "react-native-gesture-handler";
 
 function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -237,7 +238,7 @@ function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
               </TouchableOpacity>
             </View>
             {mostrarCalendario && (
-              <View style={styles.calendarioContainer}>
+              <View >
                 <CalendarPicker
                   onDateChange={onDateChange}
                   minDate={new Date()}
@@ -293,10 +294,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "bold",
+    color: "#404040"
   },
   normalText: {
     marginTop: 1,
     fontSize: 15,
+    color: "#404040"
   },
   nuevoTurnoTematicaContainer: {
     borderColor: "lightgray",
@@ -322,7 +325,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#D9D9D9",
   },
 });
 

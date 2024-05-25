@@ -10,7 +10,7 @@ function Settings({ navigation }) {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor:"#D9D9D9"}}>
       <View style={styles.container}>
         <Button title="Cerrar sesion" onPress={() => LogOut()} color={"red"} />
       </View>
@@ -21,7 +21,7 @@ function Settings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
-    marginHorizontal: 10,
+    marginHorizontal: 10
   },
 });
 
