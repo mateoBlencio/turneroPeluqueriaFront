@@ -14,13 +14,11 @@ import {
   getHorasLibre,
   createTurno,
 } from "../api/apisFunctions";
-// import CalendarPicker from "react-native-calendar-picker"; // Esto anda mal
 import { Calendar } from "react-native-calendars";
 import Spinner from "react-native-loading-spinner-overlay";
 
 // icons
 import { AntDesign } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
 
 function NuevoTurno({ refreshPadre, onNuevoTurnoGenerado }) {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
